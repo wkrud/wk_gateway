@@ -1,0 +1,37 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  config:
+    import:
+      - classpath:/yaml/application-dev.yml
+      - classpath:/yaml/application-prd.yml
+  profiles:
+    active: local
+  application:
+    name: wk-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: boardHigh
+          uri: lb://BOARDHIGH
+          predicates:
+            - Path=/boardHigh/**
+
+logging:
+  level:
+#    org.springframework.cloud.gateway: trace
+    reactor.netty: trace
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
